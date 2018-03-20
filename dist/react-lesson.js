@@ -116022,7 +116022,38 @@ exports.StaticRouter = _StaticRouter3.default;
 exports.Switch = _Switch3.default;
 exports.matchPath = _matchPath3.default;
 exports.withRouter = _withRouter3.default;
-},{"./BrowserRouter":165,"./HashRouter":166,"./Link":168,"./MemoryRouter":167,"./NavLink":169,"./Prompt":170,"./Redirect":171,"./Route":172,"./Router":173,"./StaticRouter":174,"./Switch":175,"./matchPath":176,"./withRouter":177}],13:[function(require,module,exports) {
+},{"./BrowserRouter":165,"./HashRouter":166,"./Link":168,"./MemoryRouter":167,"./NavLink":169,"./Prompt":170,"./Redirect":171,"./Route":172,"./Router":173,"./StaticRouter":174,"./Switch":175,"./matchPath":176,"./withRouter":177}],1059:[function(require,module,exports) {
+
+var baseurl = 'http://127.0.0.1:3000';
+var token = '';
+module.exports = {
+    get: function get(url) {
+        token = localStorage.getItem('token');
+        return fetch(baseurl + url, {
+            method: 'GET',
+            headers: {
+                token: token
+            }
+        }).then(function (resonse) {
+            return resonse.json();
+        });
+    },
+    post: function post(url, data) {
+        token = localStorage.getItem('token');
+        return fetch(baseurl + url, {
+            method: 'POST',
+            headers: {
+                token: token,
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*"
+            },
+            body: JSON.stringify(data)
+        }).then(function (resonse) {
+            return resonse.json();
+        });
+    }
+};
+},{}],13:[function(require,module,exports) {
 var bundleURL = null;
 function getBundleURLCached() {
   if (!bundleURL) {
@@ -116104,6 +116135,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _antd = require('antd');
 
+var _network = require('../../comman/network');
+
 require('./index.css');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -116122,12 +116155,35 @@ var LoginView = function (_React$Component) {
     function LoginView() {
         _classCallCheck(this, LoginView);
 
-        return _possibleConstructorReturn(this, (LoginView.__proto__ || Object.getPrototypeOf(LoginView)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (LoginView.__proto__ || Object.getPrototypeOf(LoginView)).call(this));
+
+        _this.state = {
+            tel: '',
+            password: ''
+        };
+        return _this;
     }
 
     _createClass(LoginView, [{
+        key: 'login',
+        value: function login() {
+            var _this2 = this;
+
+            (0, _network.post)('/user/login', { tel: this.state.tel, password: this.state.password }).then(function (data) {
+                console.log(data);
+                if (data.errcode == 0) {
+                    localStorage.setItem('token', data.data.token);
+                    _this2.props.history.push('/dash/my');
+                } else {
+                    console.log('登陆失败');
+                }
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
+            var _this3 = this;
+
             return _react2.default.createElement(
                 'div',
                 null,
@@ -116145,16 +116201,20 @@ var LoginView = function (_React$Component) {
                             _react2.default.createElement(
                                 FormItem,
                                 { label: '\u7528\u6237\u540D' },
-                                _react2.default.createElement(_antd.Input, { type: 'text', placeholder: '\u8BF7\u8F93\u5165\u7528\u6237\u540D' })
+                                _react2.default.createElement(_antd.Input, { type: 'text', placeholder: '\u8BF7\u8F93\u5165\u7528\u6237\u540D', onChange: function onChange(e) {
+                                        _this3.setState({ tel: e.target.value });
+                                    } })
                             ),
                             _react2.default.createElement(
                                 FormItem,
                                 { label: '\u5BC6\u7801' },
-                                _react2.default.createElement(_antd.Input, { type: 'password', placeholder: '\u8BF7\u8F93\u5165\u5BC6\u7801' })
+                                _react2.default.createElement(_antd.Input, { type: 'password', placeholder: '\u8BF7\u8F93\u5165\u5BC6\u7801', onChange: function onChange(e) {
+                                        _this3.setState({ password: e.target.value });
+                                    } })
                             ),
                             _react2.default.createElement(
                                 _antd.Button,
-                                { type: 'primary' },
+                                { type: 'primary', onClick: this.login.bind(this) },
                                 '\u767B\u9646'
                             )
                         )
@@ -116169,7 +116229,7 @@ var LoginView = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = LoginView;
-},{"react":12,"antd":10,"./index.css":18}],9:[function(require,module,exports) {
+},{"react":12,"antd":10,"../../comman/network":1059,"./index.css":18}],9:[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -116257,7 +116317,7 @@ exports.default = RegisterView;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -116268,6 +116328,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _antd = require('antd');
 
+var _network = require('../../comman/network');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -116276,95 +116338,109 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-// import './index.css'
 var FormItem = _antd.Form.Item;
 
 var RegisterView = function (_React$Component) {
-  _inherits(RegisterView, _React$Component);
+    _inherits(RegisterView, _React$Component);
 
-  function RegisterView() {
-    _classCallCheck(this, RegisterView);
+    function RegisterView() {
+        _classCallCheck(this, RegisterView);
 
-    return _possibleConstructorReturn(this, (RegisterView.__proto__ || Object.getPrototypeOf(RegisterView)).apply(this, arguments));
-  }
+        var _this = _possibleConstructorReturn(this, (RegisterView.__proto__ || Object.getPrototypeOf(RegisterView)).call(this));
 
-  _createClass(RegisterView, [{
-    key: 'render',
-    value: function render() {
-      var columns = [{
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        render: function render(text) {
-          return _react2.default.createElement(
-            'a',
-            { href: '#' },
-            text
-          );
-        }
-      }, {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age'
-      }, {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address'
-      }, {
-        title: 'Action',
-        key: 'action',
-        render: function render(text, record) {
-          return _react2.default.createElement(
-            'span',
-            null,
-            _react2.default.createElement(
-              'a',
-              { href: '#' },
-              'Action \u4E00 ',
-              record.name
-            ),
-            _react2.default.createElement(_antd.Divider, { type: 'vertical' }),
-            _react2.default.createElement(
-              'a',
-              { href: '#' },
-              'Delete'
-            ),
-            _react2.default.createElement(_antd.Divider, { type: 'vertical' }),
-            _react2.default.createElement(
-              'a',
-              { href: '#', className: 'ant-dropdown-link' },
-              'More actions ',
-              _react2.default.createElement(_antd.Icon, { type: 'down' })
-            )
-          );
-        }
-      }];
-
-      var data = [{
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park'
-      }, {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park'
-      }, {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park'
-      }];
-      return _react2.default.createElement(_antd.Table, { columns: columns, dataSource: data });
+        _this.state = {
+            coin: []
+        };
+        return _this;
     }
-  }]);
 
-  return RegisterView;
+    _createClass(RegisterView, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            Promise.all([(0, _network.get)('/user/balance'), (0, _network.get)('/token/alltoken')]).then(function (datas) {
+                var temp = _this2.state.coin;
+                temp.push(datas[0].data);
+                datas[1].data.map(function (d) {
+                    d.tokeninfo.balance = d.tokeninfo.mybalance;
+                    temp.push(d.tokeninfo);
+                });
+                _this2.setState({
+                    coin: temp
+                });
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var columns = [{
+                title: '币种',
+                dataIndex: 'name',
+                key: 'name',
+                render: function render(text) {
+                    return _react2.default.createElement(
+                        'a',
+                        { href: '#' },
+                        text
+                    );
+                }
+            }, {
+                title: '标识符',
+                dataIndex: 'symbol',
+                key: 'symbol'
+            }, {
+                title: '拥有量',
+                dataIndex: 'balance',
+                key: 'balance'
+            }, {
+                title: '操作',
+                key: 'action',
+                render: function render(text, record) {
+                    return _react2.default.createElement(
+                        'span',
+                        null,
+                        _react2.default.createElement(
+                            'a',
+                            { href: '#' },
+                            '\u5356\u51FA \u4E00 ',
+                            record.name
+                        ),
+                        _react2.default.createElement(_antd.Divider, { type: 'vertical' }),
+                        _react2.default.createElement(
+                            'a',
+                            { href: '#' },
+                            '\u4E70\u5165'
+                        )
+                    );
+                }
+            }];
+
+            var data = [{
+                key: '1',
+                name: 'John Brown',
+                age: 32,
+                address: 'New York No. 1 Lake Park'
+            }, {
+                key: '2',
+                name: 'Jim Green',
+                age: 42,
+                address: 'London No. 1 Lake Park'
+            }, {
+                key: '3',
+                name: 'Joe Black',
+                age: 32,
+                address: 'Sidney No. 1 Lake Park'
+            }];
+            return _react2.default.createElement(_antd.Table, { columns: columns, dataSource: this.state.coin });
+        }
+    }]);
+
+    return RegisterView;
 }(_react2.default.Component);
 
 exports.default = RegisterView;
-},{"react":12,"antd":10}],21:[function(require,module,exports) {
+},{"react":12,"antd":10,"../../comman/network":1059}],21:[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -116588,7 +116664,26 @@ var BuyTokenView = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = BuyTokenView;
-},{"react":12,"antd":10}],19:[function(require,module,exports) {
+},{"react":12,"antd":10}],1062:[function(require,module,exports) {
+'use strict';
+
+var _network = require('./network');
+
+module.exports = {
+    getUserInfo: function getUserInfo() {
+        return new Promise(function (resolve, reject) {
+            var token = localStorage.getItem('token');
+            if (token) {
+                return (0, _network.get)('/user/info').then(function (data) {
+                    resolve(data);
+                });
+            } else {
+                reject(new Error("没有token"));
+            }
+        });
+    }
+};
+},{"./network":1059}],19:[function(require,module,exports) {
 
         var reloadCSS = require('_css_loader');
         module.hot.dispose(reloadCSS);
@@ -116623,6 +116718,8 @@ var _index5 = require('../buytoken/index');
 
 var _index6 = _interopRequireDefault(_index5);
 
+var _userinfo = require('../../comman/userinfo');
+
 require('./index.css');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -116655,15 +116752,31 @@ var DashBoard = function (_React$Component) {
     function DashBoard() {
         _classCallCheck(this, DashBoard);
 
-        return _possibleConstructorReturn(this, (DashBoard.__proto__ || Object.getPrototypeOf(DashBoard)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (DashBoard.__proto__ || Object.getPrototypeOf(DashBoard)).call(this));
+
+        _this.state = {
+            userinfo: {},
+            tel: ''
+        };
+        return _this;
     }
 
     _createClass(DashBoard, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var that = this;
+            (0, _userinfo.getUserInfo)().then(function (userinfo) {
+                console.log(userinfo);
+                that.setState({
+                    userinfo: userinfo.data
+                });
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
             // 通过route(规则进入的组件),react-router 会给这个组件的props添加一个match属性
             // 这个属性包含了路由的规则的path 以及实际的路径url
-            console.log(this.props);
             var blockName = this.props.match.params.block;
             var content = void 0;
             var defaultKey = void 0;
@@ -116685,6 +116798,7 @@ var DashBoard = function (_React$Component) {
                     defaultKey = '3';
                     break;
             }
+            var userinfo = this.state.userinfo;
             return _react2.default.createElement(
                 _antd.Layout,
                 null,
@@ -116698,7 +116812,7 @@ var DashBoard = function (_React$Component) {
                             theme: 'dark',
                             mode: 'horizontal',
                             defaultSelectedKeys: [defaultKey],
-                            style: { lineHeight: '64px' }
+                            style: { lineHeight: '64px', float: 'left' }
                         },
                         _react2.default.createElement(
                             _antd.Menu.Item,
@@ -116727,6 +116841,21 @@ var DashBoard = function (_React$Component) {
                                 '\u6211\u7684\u8D44\u4EA7'
                             )
                         )
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { style: { float: 'right', width: 120, height: '31px', lineHeight: '31px', paddingTop: '20px', color: 'white' } },
+                        _react2.default.createElement(
+                            _reactRouterDom.Link,
+                            { to: '/login' },
+                            userinfo.tel
+                        ),
+                        '/',
+                        _react2.default.createElement(
+                            _reactRouterDom.Link,
+                            { to: '/register' },
+                            '\u6CE8\u518C'
+                        )
                     )
                 ),
                 _react2.default.createElement(
@@ -116751,7 +116880,7 @@ var DashBoard = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = DashBoard;
-},{"react":12,"antd":10,"react-router-dom":164,"../mycoin/index":20,"../buyether/index":21,"../buytoken/index":22,"./index.css":19}],4:[function(require,module,exports) {
+},{"react":12,"antd":10,"react-router-dom":164,"../mycoin/index":20,"../buyether/index":21,"../buytoken/index":22,"../../comman/userinfo":1062,"./index.css":19}],4:[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -117042,7 +117171,7 @@ _reactDom2.default.render(_react2.default.createElement(_index2.default, null), 
 // 2. 对要显示的组件实例化
 // 3. 组件的实例调用render获取要显示的内容 => (<div> hello 孔壹学院 </div>)
 // 4. ReactDOM.render放方法将组件render 的结果渲染到 id 为 root 的 div.
-},{"react":12,"react-dom":11,"antd":10,"./src/router/index":4,"./index.css":3}],1057:[function(require,module,exports) {
+},{"react":12,"react-dom":11,"antd":10,"./src/router/index":4,"./index.css":3}],1064:[function(require,module,exports) {
 
 var global = (1, eval)('this');
 var OldModule = module.bundle.Module;
@@ -117165,5 +117294,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.require, id);
   });
 }
-},{}]},{},[1057,2])
+},{}]},{},[1064,2])
 //# sourceMappingURL=/dist/react-lesson.map
