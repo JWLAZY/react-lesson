@@ -66,7 +66,7 @@ class DashBoard extends React.Component {
                     </div>
                 </Content>
                 <Footer style={{textAlign:'center'}}>
-                    create by kyxy
+                    create by  kyxy
                 </Footer>
             </Layout>
         )
