@@ -116371,6 +116371,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -116396,12 +116398,27 @@ var BuyEtherView = function (_React$Component) {
     function BuyEtherView() {
         _classCallCheck(this, BuyEtherView);
 
-        return _possibleConstructorReturn(this, (BuyEtherView.__proto__ || Object.getPrototypeOf(BuyEtherView)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (BuyEtherView.__proto__ || Object.getPrototypeOf(BuyEtherView)).call(this));
+
+        _this.state = {
+            price: 100,
+            number: 0
+        };
+        return _this;
     }
 
     _createClass(BuyEtherView, [{
         key: 'render',
         value: function render() {
+            var _this2 = this;
+
+            var formItemLayout = {
+                labelCol: { span: 4 },
+                wrapperCol: { span: 14 }
+            };
+            var buttonItemLayout = {
+                wrapperCol: { span: 4, offset: 14 }
+            };
             return _react2.default.createElement(
                 'div',
                 null,
@@ -116411,21 +116428,42 @@ var BuyEtherView = function (_React$Component) {
                             'a',
                             { href: '#' },
                             'More'
-                        ), style: { width: 300 } },
+                        ), style: { width: 450 } },
                     _react2.default.createElement(
-                        'p',
-                        null,
-                        'Card content'
-                    ),
-                    _react2.default.createElement(
-                        'p',
-                        null,
-                        'Card content'
-                    ),
-                    _react2.default.createElement(
-                        'p',
-                        null,
-                        'Card content'
+                        _antd.Form,
+                        { layout: 'horizontal' },
+                        _react2.default.createElement(
+                            FormItem,
+                            _extends({
+                                label: '\u5355\u4EF7'
+                            }, formItemLayout),
+                            _react2.default.createElement(_antd.Input, { value: '100RMB', disabled: 'false' })
+                        ),
+                        _react2.default.createElement(
+                            FormItem,
+                            _extends({
+                                label: '\u8D2D\u4E70\u6570\u91CF'
+                            }, formItemLayout),
+                            _react2.default.createElement(_antd.Input, { placeholder: '\u8BF7\u8F93\u5165\u8D2D\u4E70\u6570\u91CF', addonAfter: 'Ether', onChange: function onChange(e) {
+                                    _this2.setState({ number: e.target.value });
+                                } })
+                        ),
+                        _react2.default.createElement(
+                            FormItem,
+                            _extends({
+                                label: 'Field B'
+                            }, formItemLayout),
+                            _react2.default.createElement(_antd.Input, { value: this.state.number * this.state.price, disabled: 'false', addonAfter: 'RMB' })
+                        ),
+                        _react2.default.createElement(
+                            FormItem,
+                            buttonItemLayout,
+                            _react2.default.createElement(
+                                _antd.Button,
+                                { type: 'primary' },
+                                '\u63D0\u4EA4'
+                            )
+                        )
                     )
                 )
             );
@@ -116443,6 +116481,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -116459,6 +116499,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var Option = _antd.Select.Option;
 // import './index.css'
 var FormItem = _antd.Form.Item;
 
@@ -116474,30 +116515,69 @@ var BuyTokenView = function (_React$Component) {
     _createClass(BuyTokenView, [{
         key: 'render',
         value: function render() {
+            var formItemLayout = {
+                labelCol: { span: 4 },
+                wrapperCol: { span: 14 }
+            };
+            var buttonItemLayout = {
+                wrapperCol: { span: 4, offset: 14 }
+            };
             return _react2.default.createElement(
                 'div',
                 null,
                 _react2.default.createElement(
                     _antd.Card,
-                    { title: '\u8D2D\u4E70 token', extra: _react2.default.createElement(
+                    { title: '\u4EA4\u6613 token', extra: _react2.default.createElement(
                             'a',
                             { href: '#' },
                             'More'
-                        ), style: { width: 300 } },
+                        ), style: { width: 500 } },
                     _react2.default.createElement(
-                        'p',
-                        null,
-                        'Card content'
-                    ),
-                    _react2.default.createElement(
-                        'p',
-                        null,
-                        'Card content'
-                    ),
-                    _react2.default.createElement(
-                        'p',
-                        null,
-                        'Card content'
+                        _antd.Form,
+                        { layout: 'horizontal' },
+                        _react2.default.createElement(
+                            FormItem,
+                            _extends({
+                                label: '\u4EA4\u6613\u7C7B\u578B'
+                            }, formItemLayout),
+                            _react2.default.createElement(
+                                _antd.Select,
+                                { defaultValue: 'lucy', style: { width: 120 }, onChange: function onChange() {} },
+                                _react2.default.createElement(
+                                    Option,
+                                    { value: 'jack' },
+                                    '\u4E70\u5165'
+                                ),
+                                _react2.default.createElement(
+                                    Option,
+                                    { value: 'lucy' },
+                                    '\u5356\u51FA'
+                                )
+                            )
+                        ),
+                        _react2.default.createElement(
+                            FormItem,
+                            _extends({
+                                label: '\u4EE3\u5E01\u6570\u91CF'
+                            }, formItemLayout),
+                            _react2.default.createElement(_antd.Input, { placeholder: '\u8F93\u5165\u4EE3\u5E01\u6570\u91CF', addonAfter: 'MT' })
+                        ),
+                        _react2.default.createElement(
+                            FormItem,
+                            _extends({
+                                label: 'Ether\u6570\u91CF'
+                            }, formItemLayout),
+                            _react2.default.createElement(_antd.Input, { placeholder: '\u8F93\u5165Ether\u6570\u91CF', addonAfter: 'Ether' })
+                        ),
+                        _react2.default.createElement(
+                            FormItem,
+                            buttonItemLayout,
+                            _react2.default.createElement(
+                                _antd.Button,
+                                { type: 'primary' },
+                                '\u63D0\u4EA4'
+                            )
+                        )
                     )
                 )
             );
@@ -116962,7 +117042,7 @@ _reactDom2.default.render(_react2.default.createElement(_index2.default, null), 
 // 2. 对要显示的组件实例化
 // 3. 组件的实例调用render获取要显示的内容 => (<div> hello 孔壹学院 </div>)
 // 4. ReactDOM.render放方法将组件render 的结果渲染到 id 为 root 的 div.
-},{"react":12,"react-dom":11,"antd":10,"./src/router/index":4,"./index.css":3}],1056:[function(require,module,exports) {
+},{"react":12,"react-dom":11,"antd":10,"./src/router/index":4,"./index.css":3}],1057:[function(require,module,exports) {
 
 var global = (1, eval)('this');
 var OldModule = module.bundle.Module;
@@ -117085,5 +117165,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.require, id);
   });
 }
-},{}]},{},[1056,2])
+},{}]},{},[1057,2])
 //# sourceMappingURL=/dist/react-lesson.map
