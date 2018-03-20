@@ -5,6 +5,7 @@ import React from 'react';
 // router 路由表,包含了多个route(路由规则)
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import LoginView from '../views/login/index';
+import RegisterView from '../views/register/index';
 import DashBoard from '../views/dashboard/index';
 
 //定义一个组件 写了所有的路由规则
@@ -16,6 +17,7 @@ class CustomRouter extends React.Component {
                 <div>
                     <Route exact path='/' component={Page} />
                     <Route path='/login' component={LoginView} />
+                    <Route path='/register' component={RegisterView} />
                     <Route path='/dash/:block' component={DashBoard} />
                 </div>
             </Router>
