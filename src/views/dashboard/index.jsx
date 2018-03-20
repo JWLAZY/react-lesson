@@ -1,7 +1,10 @@
 import React from 'react';
 import {Layout, Menu} from 'antd';
-
 import {Link} from 'react-router-dom';
+
+import MyCoin from '../mycoin/index';
+import BuyEtherView from '../buyether/index';
+import BuyTokenView from '../buytoken/index';
 
 let {Header,Content,Footer} = Layout;
 
@@ -25,18 +28,23 @@ class DashBoard extends React.Component {
         console.log(this.props);
         let blockName = this.props.match.params.block;
         let content;
+        let defaultKey;
         switch (blockName) {
             case 'myblock':
-                content = <div>我的资产</div>;
+                content = <MyCoin />;
+                defaultKey = '3'
                 break;
             case 'buyether':
-                content = <div> 购买ether</div>;
+                content = <BuyEtherView />;
+                defaultKey = '1'
                 break;
             case 'buytoken':
-                content = <div> 购买token</div>;
+                content = <BuyTokenView />;
+                defaultKey = '2'
                 break;
             default:
-                content = <div>我的资产</div>;
+                content = <MyCoin />;
+                defaultKey = '3'
                 break;
         }
         return (
@@ -46,7 +54,7 @@ class DashBoard extends React.Component {
                     <Menu
                         theme="dark"
                         mode="horizontal"
-                        defaultSelectedKeys={['2']}
+                        defaultSelectedKeys={[defaultKey]}
                         style={{ lineHeight: '64px' }}
                     >
                         <Menu.Item key="1">

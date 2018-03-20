@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Form, Input, Button } from 'antd';
-import './index.css'
+// import './index.css'
 const FormItem = Form.Item;
 class RegisterView extends React.Component {
     render () {
