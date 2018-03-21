@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, Row, Col, Form, Input, Button, InputNumber } from 'antd';
-
+import { Card, Row, Col, Form, Input, Button, InputNumber,message,Spin } from 'antd';
+import {get, post} from '../../comman/network';
 const FormItem = Form.Item;
 
 class BuyEtherView extends React.Component {
@@ -8,14 +8,25 @@ class BuyEtherView extends React.Component {
         super();
         this.state = {
             price: 100,
-            number: 0
+            number: 0,
+            loading: false
         }
     }
-    inputNumber(event) {
-        let number = event.target.value;
-        this.setState({
-            number: number
-        })
+    buyEther(){
+        if(this.state.price * this.state.number > this.props.userinfo.balance){
+            message.error('余额不足',2);
+        }else{
+            this.setState({loading:true})
+            post('/user/buycoin',{count:this.state.number})
+            .then(data => {
+                this.setState({loading:false})
+                if(data.errcode === 0){
+                    message.info("购买成功:" + data.data.blockHash,2);
+                }else{
+                    message.error(data.errmsg,2);
+                }
+            })
+        }
     }
     render() {
         const formItemLayout = {
@@ -27,7 +38,8 @@ class BuyEtherView extends React.Component {
         };
         return (
             <div>
-                <Card title="购买Ether" extra={"余额:1000RMB"} style={{ width: 450 }}>
+                <Spin spinning={this.state.loading}>        
+                <Card title="购买Ether" extra={"余额:" + this.props.userinfo.balance + 'RMB'} style={{ width: 450 }}>
                     <Form layout='horizontal' >
                         <FormItem
                             label="单价"
@@ -48,11 +60,11 @@ class BuyEtherView extends React.Component {
                             <Input value={this.state.number * this.state.price} disabled='false' addonAfter='RMB' />
                         </FormItem>
                         <FormItem {...buttonItemLayout} >
-                            <Button type="primary">提交</Button>
+                            <Button type="primary" onClick={this.buyEther.bind(this)}>提交</Button>
                         </FormItem>
-
                     </Form>
                 </Card>
+                </Spin>
             </div>
         )
     }

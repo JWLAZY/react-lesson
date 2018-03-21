@@ -23,7 +23,7 @@ module.exports = {
           .then(data => {
               // 这个data才是我们返回的值
               if(data.errcode === 1000){
-                localStorage.setItem('token',null);
+                localStorage.removeItem('token')
                 // 构造一个promise 实例
                 // promise (pending,resolve,reject)
                 // 直接返回一个状态是resolve的promise
@@ -49,7 +49,7 @@ module.exports = {
         }).then(resonse => resonse.json())
         .then(data => {
             if(data.errcode === 1000){
-              localStorage.setItem('token',null);
+                localStorage.removeItem('token')
               return Promise.resolve(data)
             }else{
                 return Promise.resolve(data)

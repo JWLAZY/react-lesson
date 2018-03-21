@@ -22,10 +22,12 @@ class RegisterView extends React.Component {
         .then(datas => {
             // datas = [data1,data2]
             let temp = this.state.coin;
+            datas[0].data.key = -1;
             temp.push(datas[0].data);
             // alltoken 和 balance返回的数据接口不一样,特殊处理先
             datas[1].data.map(d => {
                 d.tokeninfo.balance = d.tokeninfo.mybalance;
+                d.tokeninfo.key = d.id;
                 temp.push(d.tokeninfo);
             })
             this.setState({

@@ -1,6 +1,9 @@
 .login-panel{
     height: 300px;
     box-shadow: 0 0 100px rgba(0,0,0,.08);
+}.register-panel{
+    height: 350px;
+    box-shadow: 0 0 100px rgba(0,0,0,.08);
 }.logo {
     width: 120px;
     height: 31px;

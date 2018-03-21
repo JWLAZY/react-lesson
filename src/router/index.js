@@ -15,7 +15,7 @@ class CustomRouter extends React.Component {
         return (
             <Router>
                 <div>
-                    <Route exact path='/' component={Page} />
+                    <Route exact path='/' component={DashBoard} />
                     <Route path='/login' component={LoginView} />
                     <Route path='/register' component={RegisterView} />
                     <Route path='/dash/:block' component={DashBoard} />

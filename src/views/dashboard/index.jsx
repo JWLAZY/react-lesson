@@ -36,13 +36,12 @@ class DashBoard extends React.Component {
         let that = this;
         getUserInfo()
         .then(userinfo => {
-            // userinfo = {
-            //     errcode:0,
-            //     data: {tel:'',email:''}
-            // }
-            console.log(userinfo);
             that.setState({
                 userinfo:userinfo.data
+            })
+        }).catch(error=>{
+            that.setState({
+                error: error.message
             })
         })
     }
@@ -52,17 +51,18 @@ class DashBoard extends React.Component {
         let blockName = this.props.match.params.block;
         let content;
         let defaultKey;
+        let userinfo = this.state.userinfo;
         switch (blockName) {
             case 'mycoin':
                 content = <MyCoin />;
                 defaultKey = '3'
                 break;
             case 'buyether':
-                content = <BuyEtherView />;
+                content = <BuyEtherView userinfo={userinfo}/>;
                 defaultKey = '1'
                 break;
             case 'buytoken':
-                content = <BuyTokenView />;
+                content = <BuyTokenView userinfo={userinfo}/>;
                 defaultKey = '2'
                 break;
             default:
@@ -70,7 +70,6 @@ class DashBoard extends React.Component {
                 defaultKey = '3'
                 break;
         }
-        let userinfo = this.state.userinfo;
         return (
             <Layout>
                 <Header>
@@ -92,7 +91,7 @@ class DashBoard extends React.Component {
                         </Menu.Item>
                     </Menu>
                     <div style={{float: 'right',width: 120,height:'31px',lineHeight:'31px',paddingTop:'20px',color:'white'}}>
-                        <Link to="/login">{userinfo.tel ? userinfo.tel : '登录'}</Link>
+                        <Link to="/login">{userinfo && userinfo.tel ? userinfo.tel : '登录'}</Link>
                         /
                         <Link to="/register">注册</Link>
                     </div>
