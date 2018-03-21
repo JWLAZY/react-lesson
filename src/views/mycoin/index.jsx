@@ -11,13 +11,19 @@ class RegisterView extends React.Component {
         }
     }
     componentDidMount(){
+        // 同时发起多个请求
+        // 多个 请求结束之后再会走then
         Promise.all([
             get('/user/balance'),
             get('/token/alltoken')
         ])
+        //{"errcode":0,"data":{"name":"以太币","symbol":"Ether","balance":"850.989394418000000009"}}
+        //
         .then(datas => {
+            // datas = [data1,data2]
             let temp = this.state.coin;
             temp.push(datas[0].data);
+            // alltoken 和 balance返回的数据接口不一样,特殊处理先
             datas[1].data.map(d => {
                 d.tokeninfo.balance = d.tokeninfo.mybalance;
                 temp.push(d.tokeninfo);
@@ -28,11 +34,12 @@ class RegisterView extends React.Component {
         })
     }
     render () {
+        // 表头
         const columns = [{
             title: '币种',
             dataIndex: 'name',
             key: 'name',
-        render: (text) => (<a href="#">{text}</a>),
+            render: (text) => (<a href="#">{text}</a>),
           },{
             title: '标识符',
             dataIndex: 'symbol',

@@ -8,7 +8,7 @@ module.exports = {
         // 发起网络请求之前取到token
         token = localStorage.getItem('token');
         // fetch(url, "http请求配置信息")
-        let promise = fetch(baseurl + url, {
+        return fetch(baseurl + url, {
             method: 'GET',
             headers: {
               token:token
@@ -24,12 +24,17 @@ module.exports = {
               // 这个data才是我们返回的值
               if(data.errcode === 1000){
                 localStorage.setItem('token',null);
+                // 构造一个promise 实例
+                // promise (pending,resolve,reject)
+                // 直接返回一个状态是resolve的promise
+                // return new Promise((resolve,reject) => {
+                //     resolve(data);
+                // })
                 return Promise.resolve(data)
               }else{
                 return Promise.resolve(data)
               }
           })
-          return promise;
     },
     post: (url, data) => {
         token = localStorage.getItem('token');

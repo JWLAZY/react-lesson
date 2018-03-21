@@ -31,10 +31,15 @@ class DashBoard extends React.Component {
             tel:''
         }
     }
+    // 页面首次渲染会触发这个方法
     componentDidMount(){
         let that = this;
         getUserInfo()
         .then(userinfo => {
+            // userinfo = {
+            //     errcode:0,
+            //     data: {tel:'',email:''}
+            // }
             console.log(userinfo);
             that.setState({
                 userinfo:userinfo.data
