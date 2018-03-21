@@ -116668,6 +116668,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _antd = require('antd');
 
+var _network = require('../../comman/network');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -116686,12 +116688,69 @@ var BuyTokenView = function (_React$Component) {
     function BuyTokenView() {
         _classCallCheck(this, BuyTokenView);
 
-        return _possibleConstructorReturn(this, (BuyTokenView.__proto__ || Object.getPrototypeOf(BuyTokenView)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (BuyTokenView.__proto__ || Object.getPrototypeOf(BuyTokenView)).call(this));
+
+        _this.state = {
+            token: [],
+            loading: false,
+            selectToken: {},
+            typeid: '0'
+        };
+        return _this;
     }
 
     _createClass(BuyTokenView, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            this.setState({ loading: true });
+            (0, _network.get)('/token/alltoken').then(function (data) {
+                _this2.setState({ loading: false });
+                if (data.errcode === 0) {
+                    _this2.setState({ token: data.data });
+                } else {
+                    _antd.message.error(data.errmsg, 3);
+                }
+            });
+        }
+        // 挂单
+
+    }, {
+        key: 'addOrder',
+        value: function addOrder() {
+            var _state = this.state,
+                typeid = _state.typeid,
+                tokencount = _state.tokencount,
+                ethercount = _state.ethercount,
+                selectToken = _state.selectToken;
+
+            var body = {
+                tokenid: selectToken.id,
+                count: tokencount,
+                ethercount: ethercount,
+                typeid: typeid
+            };
+            (0, _network.post)('/user/addorder', body).then(function (data) {
+                if (data.errcode === 0) {
+                    _antd.message.info(data.data.msg, 3);
+                } else {
+                    _antd.message.error(data.errmsg, 3);
+                }
+            });
+        }
+    }, {
+        key: 'changeToken',
+        value: function changeToken(e) {
+            this.setState({
+                selectToken: this.state.token[e]
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
+            var _this3 = this;
+
             var formItemLayout = {
                 labelCol: { span: 4 },
                 wrapperCol: { span: 14 }
@@ -116699,60 +116758,84 @@ var BuyTokenView = function (_React$Component) {
             var buttonItemLayout = {
                 wrapperCol: { span: 4, offset: 14 }
             };
+            var tokens = _react2.default.createElement(
+                _antd.Select,
+                { style: { width: 70 }, onChange: this.changeToken.bind(this) },
+                this.state.token.map(function (token, index) {
+                    return _react2.default.createElement(
+                        Option,
+                        { value: index },
+                        token.tokeninfo.symbol
+                    );
+                })
+            );
+            var stoken = this.state.selectToken;
+            var cardExtra = '';
+            if (stoken.tokeninfo) {
+                cardExtra = "剩余" + stoken.tokeninfo.mybalance + ' ' + stoken.tokeninfo.symbol;
+            } else {
+                cardExtra = "";
+            }
             return _react2.default.createElement(
                 'div',
                 null,
                 _react2.default.createElement(
-                    _antd.Card,
-                    { title: '\u4EA4\u6613 token', extra: _react2.default.createElement(
-                            'a',
-                            { href: '#' },
-                            'More'
-                        ), style: { width: 500 } },
+                    _antd.Spin,
+                    { spinning: this.state.loading },
                     _react2.default.createElement(
-                        _antd.Form,
-                        { layout: 'horizontal' },
+                        _antd.Card,
+                        { title: '\u4EA4\u6613 token', extra: cardExtra, style: { width: 500 } },
                         _react2.default.createElement(
-                            FormItem,
-                            _extends({
-                                label: '\u4EA4\u6613\u7C7B\u578B'
-                            }, formItemLayout),
+                            _antd.Form,
+                            { layout: 'horizontal' },
                             _react2.default.createElement(
-                                _antd.Select,
-                                { defaultValue: 'in', style: { width: 120 }, onChange: function onChange() {} },
+                                FormItem,
+                                _extends({
+                                    label: '\u4EA4\u6613\u7C7B\u578B'
+                                }, formItemLayout),
                                 _react2.default.createElement(
-                                    Option,
-                                    { value: 'in' },
-                                    '\u4E70\u5165'
-                                ),
-                                _react2.default.createElement(
-                                    Option,
-                                    { value: 'out' },
-                                    '\u5356\u51FA'
+                                    _antd.Select,
+                                    { defaultValue: '0', style: { width: 120 }, onChange: function onChange(e) {
+                                            console.log(e);_this3.setState({ typeid: e });
+                                        } },
+                                    _react2.default.createElement(
+                                        Option,
+                                        { value: '0' },
+                                        '\u4E70\u5165'
+                                    ),
+                                    _react2.default.createElement(
+                                        Option,
+                                        { value: '1' },
+                                        '\u5356\u51FA'
+                                    )
                                 )
-                            )
-                        ),
-                        _react2.default.createElement(
-                            FormItem,
-                            _extends({
-                                label: '\u4EE3\u5E01\u6570\u91CF'
-                            }, formItemLayout),
-                            _react2.default.createElement(_antd.Input, { placeholder: '\u8F93\u5165\u4EE3\u5E01\u6570\u91CF', addonAfter: 'MT' })
-                        ),
-                        _react2.default.createElement(
-                            FormItem,
-                            _extends({
-                                label: 'Ether\u6570\u91CF'
-                            }, formItemLayout),
-                            _react2.default.createElement(_antd.Input, { placeholder: '\u8F93\u5165Ether\u6570\u91CF', addonAfter: 'Ether' })
-                        ),
-                        _react2.default.createElement(
-                            FormItem,
-                            buttonItemLayout,
+                            ),
                             _react2.default.createElement(
-                                _antd.Button,
-                                { type: 'primary' },
-                                '\u63D0\u4EA4'
+                                FormItem,
+                                _extends({
+                                    label: '\u4EE3\u5E01\u6570\u91CF'
+                                }, formItemLayout),
+                                _react2.default.createElement(_antd.Input, { placeholder: '\u8F93\u5165\u4EE3\u5E01\u6570\u91CF', addonAfter: tokens, onChange: function onChange(e) {
+                                        _this3.setState({ tokencount: e.target.value });
+                                    } })
+                            ),
+                            _react2.default.createElement(
+                                FormItem,
+                                _extends({
+                                    label: 'Ether\u6570\u91CF'
+                                }, formItemLayout),
+                                _react2.default.createElement(_antd.Input, { placeholder: '\u8F93\u5165Ether\u6570\u91CF', addonAfter: 'Ether', onChange: function onChange(e) {
+                                        _this3.setState({ ethercount: e.target.value });
+                                    } })
+                            ),
+                            _react2.default.createElement(
+                                FormItem,
+                                buttonItemLayout,
+                                _react2.default.createElement(
+                                    _antd.Button,
+                                    { type: 'primary', onClick: this.addOrder.bind(this) },
+                                    '\u63D0\u4EA4'
+                                )
                             )
                         )
                     )
@@ -116765,7 +116848,7 @@ var BuyTokenView = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = BuyTokenView;
-},{"react":14,"antd":16}],164:[function(require,module,exports) {
+},{"react":14,"antd":16,"../../comman/network":163}],164:[function(require,module,exports) {
 'use strict';
 
 var _network = require('./network');
@@ -116945,6 +117028,24 @@ var DashBoard = function (_React$Component) {
                                 _reactRouterDom.Link,
                                 { to: '/dash/mycoin' },
                                 '\u6211\u7684\u8D44\u4EA7'
+                            )
+                        ),
+                        _react2.default.createElement(
+                            _antd.Menu.Item,
+                            { key: '4' },
+                            _react2.default.createElement(
+                                _reactRouterDom.Link,
+                                { to: '/dash/mycoin' },
+                                '\u6211\u7684\u8BA2\u5355'
+                            )
+                        ),
+                        _react2.default.createElement(
+                            _antd.Menu.Item,
+                            { key: '5' },
+                            _react2.default.createElement(
+                                _reactRouterDom.Link,
+                                { to: '/dash/mycoin' },
+                                '\u6240\u6709\u4EE3\u5E01'
                             )
                         )
                     ),
@@ -117277,7 +117378,7 @@ _reactDom2.default.render(_react2.default.createElement(_index2.default, null), 
 // 2. 对要显示的组件实例化
 // 3. 组件的实例调用render获取要显示的内容 => (<div> hello 孔壹学院 </div>)
 // 4. ReactDOM.render放方法将组件render 的结果渲染到 id 为 root 的 div.
-},{"react":14,"react-dom":15,"antd":16,"./src/router/index":4,"./index.css":3}],1065:[function(require,module,exports) {
+},{"react":14,"react-dom":15,"antd":16,"./src/router/index":4,"./index.css":3}],1067:[function(require,module,exports) {
 
 var global = (1, eval)('this');
 var OldModule = module.bundle.Module;
@@ -117400,5 +117501,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.require, id);
   });
 }
-},{}]},{},[1065,2])
+},{}]},{},[1067,2])
 //# sourceMappingURL=/dist/react-lesson.map

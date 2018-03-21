@@ -89,6 +89,12 @@ class DashBoard extends React.Component {
                         <Menu.Item key="3">
                             <Link to='/dash/mycoin'>我的资产</Link>
                         </Menu.Item>
+                        <Menu.Item key="4">
+                            <Link to='/dash/mycoin'>我的订单</Link>
+                        </Menu.Item>
+                        <Menu.Item key="5">
+                            <Link to='/dash/mycoin'>所有代币</Link>
+                        </Menu.Item>
                     </Menu>
                     <div style={{float: 'right',width: 120,height:'31px',lineHeight:'31px',paddingTop:'20px',color:'white'}}>
                         <Link to="/login">{userinfo && userinfo.tel ? userinfo.tel : '登录'}</Link>
