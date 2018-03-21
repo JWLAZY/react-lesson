@@ -48,7 +48,7 @@ class DashBoard extends React.Component {
         let content;
         let defaultKey;
         switch (blockName) {
-            case 'myblock':
+            case 'mycoin':
                 content = <MyCoin />;
                 defaultKey = '3'
                 break;
@@ -87,7 +87,7 @@ class DashBoard extends React.Component {
                         </Menu.Item>
                     </Menu>
                     <div style={{float: 'right',width: 120,height:'31px',lineHeight:'31px',paddingTop:'20px',color:'white'}}>
-                        <Link to="/login">{userinfo.tel}</Link>
+                        <Link to="/login">{userinfo.tel ? userinfo.tel : '登录'}</Link>
                         /
                         <Link to="/register">注册</Link>
                     </div>

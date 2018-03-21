@@ -32,7 +32,7 @@ class RegisterView extends React.Component {
             title: '币种',
             dataIndex: 'name',
             key: 'name',
-            render: text => <a href="#">{text}</a>,
+        render: (text) => (<a href="#">{text}</a>),
           },{
             title: '标识符',
             dataIndex: 'symbol',
@@ -51,23 +51,6 @@ class RegisterView extends React.Component {
                 <a href="#">买入</a>
               </span>
             ),
-          }];
-          
-          const data = [{
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-          }, {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-          }, {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
           }];
         return (
             <Table columns={columns} dataSource={this.state.coin} />

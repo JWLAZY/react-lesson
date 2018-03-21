@@ -20,9 +20,9 @@ class BuyTokenView extends React.Component {
                         label="交易类型"
                         {...formItemLayout}
                         >
-                        <Select defaultValue="lucy" style={{ width: 120 }} onChange={()=>{}}>
-                            <Option value="jack">买入</Option>
-                            <Option value="lucy">卖出</Option>
+                        <Select defaultValue="in" style={{ width: 120 }} onChange={()=>{}}>
+                            <Option value="in">买入</Option>
+                            <Option value="out">卖出</Option>
                         </Select>
                     </FormItem>
                     <FormItem
