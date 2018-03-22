@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Form, Input, Button } from 'antd';
+import { Row, Col, Form, Input, Button,Modal, Spin } from 'antd';
 import { Table, Icon, Divider } from 'antd';
 import {get,post} from '../../comman/network';
 const FormItem = Form.Item;
@@ -7,7 +7,9 @@ class RegisterView extends React.Component {
     constructor() {
         super();
         this.state = {
-            coin:[]
+            coin:[],
+            visible: false,
+            loading: false
         }
     }
     componentDidMount(){
@@ -17,8 +19,6 @@ class RegisterView extends React.Component {
             get('/user/balance'),
             get('/token/alltoken')
         ])
-        //{"errcode":0,"data":{"name":"以太币","symbol":"Ether","balance":"850.989394418000000009"}}
-        //
         .then(datas => {
             // datas = [data1,data2]
             let temp = this.state.coin;
@@ -28,11 +28,38 @@ class RegisterView extends React.Component {
             datas[1].data.map(d => {
                 d.tokeninfo.balance = d.tokeninfo.mybalance;
                 d.tokeninfo.key = d.id;
+                d.tokeninfo.address = d.address;
                 temp.push(d.tokeninfo);
             })
             this.setState({
                 coin:temp
             })
+        })
+    }
+    handleOk(){
+        this.setState({loading:true})
+        let data = {
+            toaddress: this.state.address,
+            tokenaddress: this.state.select.address,
+            count: this.state.count
+        }
+        post('/token/transtoaddress',data)
+        .then(result => {
+            if(result.errcode == 0){
+                this.setState({
+                    visible: false,
+                    loading: false
+                });
+            }else{
+                this.setState({
+                    loading: false
+                });
+            }
+        })
+    }
+    handleCancel(){
+        this.setState({
+            visible: false
         })
     }
     render () {
@@ -55,15 +82,29 @@ class RegisterView extends React.Component {
             key: 'action',
             render: (text, record) => (
               <span>
-                <a href="#">卖出 一 {record.name}</a>
+                <a onClick={e=>{this.setState({visible:true,select:record})}}>转账 一 {record.name}</a>
                 <Divider type="vertical" />
                 <a href="#">买入</a>
               </span>
             ),
           }];
-        return (
-            <Table columns={columns} dataSource={this.state.coin} />
-        )
+        return [
+            <Spin spinning={this.state.loading}>
+                <Table columns={columns} dataSource={this.state.coin} />
+            </Spin>,
+            <Modal
+                title="转 币"
+                visible={this.state.visible}
+                onOk={this.handleOk.bind(this)}
+                onCancel={this.handleCancel.bind(this)}
+                okText="确认"
+                cancelText="取消"
+                >
+                <Input placeholder="对方ether地址" onChange={(e)=>{this.setState({address:e.target.value})}}/>
+                <br />
+                <Input placeholder="转账数量" onChange={(e)=>{this.setState({count:e.target.value})}} />
+            </Modal>
+        ]
     }
 }
 export default RegisterView;

@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 import MyCoin from '../mycoin/index';
 import BuyEtherView from '../buyether/index';
 import BuyTokenView from '../buytoken/index';
+import OrderView from '../orders/index';
 
 import {getUserInfo} from '../../comman/userinfo';
 
@@ -65,6 +66,10 @@ class DashBoard extends React.Component {
                 content = <BuyTokenView userinfo={userinfo}/>;
                 defaultKey = '2'
                 break;
+            case 'order':
+                content = <OrderView />;
+                defaultKey = '4';
+                break;
             default:
                 content = <MyCoin />;
                 defaultKey = '3'
@@ -90,7 +95,7 @@ class DashBoard extends React.Component {
                             <Link to='/dash/mycoin'>我的资产</Link>
                         </Menu.Item>
                         <Menu.Item key="4">
-                            <Link to='/dash/mycoin'>我的订单</Link>
+                            <Link to='/dash/order'>我的订单</Link>
                         </Menu.Item>
                         <Menu.Item key="5">
                             <Link to='/dash/mycoin'>所有代币</Link>

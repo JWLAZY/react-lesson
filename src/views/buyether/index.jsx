@@ -9,7 +9,12 @@ class BuyEtherView extends React.Component {
         this.state = {
             price: 100,
             number: 0,
-            loading: false
+            loading: false,
+            test: {
+                test1: {
+                    name:23
+                }
+            }
         }
     }
     buyEther(){
